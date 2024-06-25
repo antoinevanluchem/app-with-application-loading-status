@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.Log
@@ -89,13 +90,18 @@ class LoadingButton @JvmOverloads constructor(
             drawRectangle(it)
             drawLoadingRectangle(it)
             drawText(it)
-
+            drawLoadingCircle(it)
         }
     }
 
     private fun drawRectangle(canvas: Canvas) {
         paint.color = ContextCompat.getColor(context, R.color.colorPrimary)
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), paint)
+    }
+
+    private fun drawLoadingRectangle(canvas: Canvas) {
+        paint.color = ContextCompat.getColor(context, R.color.colorPrimaryDark)
+        canvas.drawRect(0f, 0f, widthSize.toFloat() * currentLoadingPercentage, heightSize.toFloat(), paint)
     }
 
     private fun drawText(canvas: Canvas) {
@@ -108,9 +114,16 @@ class LoadingButton @JvmOverloads constructor(
         canvas.drawText(buttonText, x, y, paint)
     }
 
-    private fun drawLoadingRectangle(canvas: Canvas) {
-        paint.color = ContextCompat.getColor(context, R.color.colorPrimaryDark)
-        canvas.drawRect(0f, 0f, widthSize.toFloat() * currentLoadingPercentage, heightSize.toFloat(), paint)
+    private fun drawLoadingCircle(canvas: Canvas) {
+        canvas.save()
+
+        val textWidth = paint.measureText(R.string.button_loading.toString())
+        canvas.translate(
+            widthSize / 2.0f + textWidth / 2.0f + paint.textSize / 2.0f,heightSize / 2.0f - paint.textSize / 2.0f
+        )
+        paint.color = ContextCompat.getColor(context, R.color.colorAccent)
+        canvas.drawArc(RectF(0f, 0f, paint.textSize, paint.textSize), 0F, currentLoadingPercentage * 360, true, paint)
+        canvas.restore()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
