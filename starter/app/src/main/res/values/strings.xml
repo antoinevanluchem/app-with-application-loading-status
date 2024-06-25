@@ -21,5 +21,10 @@
     <string name="download_notification_channel_id" translatable="false">download_channel</string>
     <string name="download_notification_channel_name" translatable="false">Downloads</string>
 
+    <string name="file_name">File name:</string>
+    <string name="status">Status:</string>
+    <string name="ok">OK</string>
+    <string name="success_status">Success</string>
+    <string name="failure_status">Failure</string>
 
 </resources>
