@@ -17,14 +17,39 @@ import kotlin.properties.Delegates
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
+    //
+    // Coordinates
+    //
+
     private var widthSize = 0
+        set(value) {
+            field = value
+
+            xText = widthSize / 2.0f
+            dxCircle = widthSize / 2.0f + paint.measureText(R.string.button_loading.toString()) / 2.0f + paint.textSize / 2.0f
+        }
+
     private var heightSize = 0
+        set(value) {
+            field = value
+
+            yText = (heightSize - textHeight) / 2.0f - paint.ascent()
+            dyCircle = heightSize / 2.0f - paint.textSize / 2.0f
+        }
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
         textSize = 55.0f
     }
+    private var textHeight = paint.descent() - paint.ascent()
+
+    private var xText = 0.0f
+    private var yText = 0.0f
+
+    private var dxCircle = 0.0f
+    private var dyCircle = 0.0f
 
     //
     // ButtonState
@@ -107,22 +132,16 @@ class LoadingButton @JvmOverloads constructor(
     private fun drawText(canvas: Canvas) {
         paint.color = ContextCompat.getColor(context, R.color.white)
 
-        val textHeight = paint.descent() - paint.ascent()
-        val x = widthSize / 2.0f
-        val y = (heightSize - textHeight) / 2.0f - paint.ascent()
-
-        canvas.drawText(buttonText, x, y, paint)
+        canvas.drawText(buttonText, xText, yText, paint)
     }
 
     private fun drawLoadingCircle(canvas: Canvas) {
         canvas.save()
 
-        val textWidth = paint.measureText(R.string.button_loading.toString())
-        canvas.translate(
-            widthSize / 2.0f + textWidth / 2.0f + paint.textSize / 2.0f,heightSize / 2.0f - paint.textSize / 2.0f
-        )
+        canvas.translate(dxCircle, dyCircle)
         paint.color = ContextCompat.getColor(context, R.color.colorAccent)
         canvas.drawArc(RectF(0f, 0f, paint.textSize, paint.textSize), 0F, currentLoadingPercentage * 360, true, paint)
+
         canvas.restore()
     }
 
