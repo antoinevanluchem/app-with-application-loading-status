@@ -98,7 +98,12 @@ class LoadingButton @JvmOverloads constructor(
 
     private fun drawText(canvas: Canvas) {
         paint.color = ContextCompat.getColor(context, R.color.white)
-        canvas.drawText(buttonText, widthSize / 2.0f, heightSize / 2.0f + 20.0f, paint)
+
+        val textHeight = paint.descent() - paint.ascent()
+        val x = widthSize / 2.0f
+        val y = (heightSize - textHeight) / 2.0f - paint.ascent()
+
+        canvas.drawText(buttonText, x, y, paint)
     }
 
     private fun drawLoadingRectangle(canvas: Canvas) {
