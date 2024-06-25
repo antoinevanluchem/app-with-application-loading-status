@@ -18,4 +18,8 @@
 
     <string name="please_select_file">Please select the file to download</string>
 
+    <string name="download_notification_channel_id" translatable="false">download_channel</string>
+    <string name="download_notification_channel_name" translatable="false">Downloads</string>
+
+
 </resources>
