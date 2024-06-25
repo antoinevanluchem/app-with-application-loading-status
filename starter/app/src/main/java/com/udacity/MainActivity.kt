@@ -73,6 +73,8 @@ class MainActivity : AppCompatActivity() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            findViewById<LoadingButton>(R.id.customButton).finishLoadingAnimation()
+
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             val notificationManager = ContextCompat.getSystemService(applicationContext,

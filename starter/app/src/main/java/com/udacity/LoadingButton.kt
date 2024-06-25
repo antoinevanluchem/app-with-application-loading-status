@@ -59,9 +59,29 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
+    private var valueAnimator: ValueAnimator? = null
+
+    // The loading animation only loads until 75%. The last 25% will only be animated, once
+    // `finishLoadingAnimation` is called. A better way would be to inject the
+    // `currentLoadingPercentage` in the LoadingButton, but that is out of scope for this project.
     private fun startLoadingAnimation() {
-        ValueAnimator.ofFloat(0.0f, 1.0f).apply {
-            duration = 5000
+        valueAnimator?.cancel()
+        valueAnimator = ValueAnimator.ofFloat(0.0f, 0.75f).apply {
+            duration = 10000
+
+            addUpdateListener { animation ->
+                currentLoadingPercentage = animation.animatedValue as Float
+                invalidate()
+            }
+
+            start()
+        }
+    }
+
+    // Finish the animation quickly
+    fun finishLoadingAnimation() {
+        val finishAnimator = ValueAnimator.ofFloat(currentLoadingPercentage, 1.0f).apply {
+            duration = 500
 
             addUpdateListener { animation ->
                 currentLoadingPercentage = animation.animatedValue as Float
@@ -77,6 +97,8 @@ class LoadingButton @JvmOverloads constructor(
 
             start()
         }
+        valueAnimator?.cancel()
+        valueAnimator = finishAnimator
     }
 
     //
