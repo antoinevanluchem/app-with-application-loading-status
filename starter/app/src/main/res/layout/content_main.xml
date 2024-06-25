@@ -14,8 +14,10 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:scaleType="fitCenter"
+        android:background="@color/colorPrimaryDark"
+        android:scaleType="centerInside"
         android:src="@drawable/download_image"
+        app:tint="@color/purple"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside" />
