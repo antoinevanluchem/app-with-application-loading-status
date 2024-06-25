@@ -16,20 +16,34 @@ import kotlin.properties.Delegates
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    init {
-        isClickable = true
-    }
-
     private var widthSize = 0
     private var heightSize = 0
 
-    private var currentLoadingPercentage = 0.0f
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        textAlign = Paint.Align.CENTER
+        textSize = 55.0f
+    }
 
-    private var valueAnimator: ValueAnimator? = null
+    //
+    // ButtonState
+    //
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { _, _, new ->
+        onButtonStateChangedTo(new)
+    }
+
+    init {
+        buttonState = ButtonState.Completed
+    }
+
+    private var buttonText = resources.getString(R.string.button_name)
+    private var currentLoadingPercentage = 0.0f
+
+    private fun onButtonStateChangedTo(new: ButtonState) {
         when (new) {
             ButtonState.Clicked -> {
+                isClickable = false
                 buttonState = ButtonState.Loading
             }
 
@@ -46,20 +60,8 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    private var buttonText = resources.getString(R.string.button_name)
-
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        textAlign = Paint.Align.CENTER
-        textSize = 55.0f
-    }
-
-    //
-    // Animation
-    //
     private fun startLoadingAnimation() {
-        valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f)
-        valueAnimator?.apply {
+        ValueAnimator.ofFloat(0.0f, 1.0f).apply {
             duration = 5000
 
             addUpdateListener { animation ->
@@ -85,9 +87,9 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         canvas?.let {
             drawRectangle(it)
+            drawLoadingRectangle(it)
             drawText(it)
 
-            drawLoadingRectangle(it)
         }
     }
 
