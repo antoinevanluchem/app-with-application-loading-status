@@ -27,34 +27,34 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/custom_button"
+        app:layout_constraintBottom_toTopOf="@+id/customButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <RadioButton
-            android:id="@+id/radio_glide"
+            android:id="@+id/radioGlide"
             style="@style/RadioButtonTextStyle"
             android:text="@string/glide" />
 
         <RadioButton
-            android:id="@+id/radio_load_app"
+            android:id="@+id/radioLoadApp"
             style="@style/RadioButtonTextStyle"
             android:text="@string/load_app" />
 
         <RadioButton
-            android:id="@+id/radio_retrofit"
+            android:id="@+id/radioRetrofit"
             style="@style/RadioButtonTextStyle"
             android:text="@string/retrofit" />
     </RadioGroup>
 
     <com.udacity.LoadingButton
-        android:id="@+id/custom_button"
+        android:id="@+id/customButton"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

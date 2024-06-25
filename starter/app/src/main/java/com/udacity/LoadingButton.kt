@@ -163,8 +163,14 @@ class LoadingButton @JvmOverloads constructor(
     //
     // Perform Click
     //
+    fun setOnClickListener(listener: () -> Unit) {
+        super.setOnClickListener {
+            listener.invoke()
+        }
+    }
+
     override fun performClick(): Boolean {
-        if (super.performClick()) return true
+        super.performClick()
 
         buttonState = ButtonState.Clicked
 

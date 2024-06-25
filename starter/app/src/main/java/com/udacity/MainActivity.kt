@@ -9,6 +9,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.udacity.databinding.ActivityMainBinding
@@ -31,10 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        // TODO: Implement code below
-//        binding.custom_button.setOnClickListener {
-//            download()
-//        }
+        // Unable to use DataBinding, no idea why
+        val customButton = findViewById<LoadingButton>(R.id.customButton)
+        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
+
+        customButton.setOnClickListener {
+            when(radioGroup.checkedRadioButtonId){
+                R.id.radioGlide -> download(GLIDE_URL)
+                R.id.radioLoadApp -> download(LOAD_APP_URL)
+                R.id.radioRetrofit -> download(RETROFIT_URL)
+                else -> Toast.makeText(this,getString(R.string.please_select_file), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -43,9 +54,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun download() {
+    private fun download(url: String) {
         val request =
-            DownloadManager.Request(Uri.parse(URL))
+            DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.app_name))
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
@@ -58,7 +69,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val URL =
+        private const val GLIDE_URL =
+            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val LOAD_APP_URL =
+            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val RETROFIT_URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
     }
