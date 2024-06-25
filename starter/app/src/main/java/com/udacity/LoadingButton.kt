@@ -17,44 +17,18 @@ import kotlin.properties.Delegates
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     //
-    // Coordinates
+    // Paint
     //
-
-    private var widthSize = 0
-        set(value) {
-            field = value
-
-            xText = widthSize / 2.0f
-            dxCircle = widthSize / 2.0f + paint.measureText(R.string.button_loading.toString()) / 2.0f + paint.textSize / 2.0f
-        }
-
-    private var heightSize = 0
-        set(value) {
-            field = value
-
-            yText = (heightSize - textHeight) / 2.0f - paint.ascent()
-            dyCircle = heightSize / 2.0f - paint.textSize / 2.0f
-        }
-
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
         textSize = 55.0f
     }
-    private var textHeight = paint.descent() - paint.ascent()
-
-    private var xText = 0.0f
-    private var yText = 0.0f
-
-    private var dxCircle = 0.0f
-    private var dyCircle = 0.0f
 
     //
     // ButtonState
     //
-
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { _, _, new ->
         onButtonStateChangedTo(new)
     }
@@ -74,7 +48,6 @@ class LoadingButton @JvmOverloads constructor(
             }
 
             ButtonState.Loading -> {
-                isClickable = false
                 buttonText = context.resources.getString(R.string.button_loading)
                 startLoadingAnimation()
             }
@@ -145,6 +118,35 @@ class LoadingButton @JvmOverloads constructor(
         canvas.restore()
     }
 
+    //
+    // Coordinates and measurements
+    //
+    private var widthSize = 0
+        set(value) {
+            field = value
+
+            // xText and dxCircle are relative to widthSize
+            xText = widthSize / 2.0f
+            dxCircle = widthSize / 2.0f + paint.measureText(R.string.button_loading.toString()) / 2.0f + paint.textSize / 2.0f
+        }
+
+    private var heightSize = 0
+        set(value) {
+            field = value
+
+            // yText and dyCircle are relative to heightSize
+            yText = (heightSize - textHeight) / 2.0f - paint.ascent()
+            dyCircle = heightSize / 2.0f - paint.textSize / 2.0f
+        }
+
+    private var textHeight = paint.descent() - paint.ascent()
+
+    private var xText = 0.0f
+    private var yText = 0.0f
+
+    private var dxCircle = 0.0f
+    private var dyCircle = 0.0f
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
         val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
@@ -158,11 +160,13 @@ class LoadingButton @JvmOverloads constructor(
         setMeasuredDimension(w, h)
     }
 
+    //
+    // Perform Click
+    //
     override fun performClick(): Boolean {
         if (super.performClick()) return true
 
         buttonState = ButtonState.Clicked
-
 
         invalidate()
         return true
