@@ -22,6 +22,8 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
+    private var buttonText = resources.getString(R.string.button_name)
+
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
@@ -35,6 +37,7 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         canvas?.let {
             drawButton(it)
+            drawText(it)
         }
     }
 
@@ -43,6 +46,10 @@ class LoadingButton @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), paint)
     }
 
+    private fun drawText(canvas: Canvas) {
+        paint.color = ContextCompat.getColor(context, R.color.white)
+        canvas.drawText(buttonText, widthSize / 2.0f, heightSize / 2.0f + 20.0f, paint)
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
