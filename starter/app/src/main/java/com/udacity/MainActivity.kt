@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         // Unable to use DataBinding, no idea why
-        val customButton = findViewById<LoadingButton>(R.id.customButton)
-        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
+        val customButton = binding.customButton
+        val radioGroup = binding.radioGroup
 
         customButton.setOnClickListener {
             when(radioGroup.checkedRadioButtonId){
