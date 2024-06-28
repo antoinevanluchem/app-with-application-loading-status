@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var retrofit: DownloadEntity.Retrofit
 
     private var downloadedEntity: DownloadEntity? = null
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -55,6 +55,13 @@ class MainActivity : AppCompatActivity() {
         )
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
+        registerOnClickListener()
+    }
+
+    //
+    // On Click Listener
+    //
+    private fun registerOnClickListener() {
         binding.contentMain.customButton.setOnClickListener {
             this.getSystemService(NotificationManager::class.java).cancelNotifications()
             downloadedEntity = when (binding.contentMain.radioGroup.checkedRadioButtonId) {
@@ -118,6 +125,13 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             }
+        }
+    }
+
+    private fun requestNotificationPermission () {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(Manifest.permission.POST_NOTIFICATIONS)
+
         }
     }
 
