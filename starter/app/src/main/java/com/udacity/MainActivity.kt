@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         // Unable to use DataBinding, no idea why
-        val customButton = findViewById<LoadingButton>(R.id.customButton)
-        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
+        val customButton = binding.contentMain.customButton
+        val radioGroup = binding.contentMain.radioGroup
 
         glide = DownloadEntity.Glide(GLIDE_URL, getString(R.string.glide))
         loadApp = DownloadEntity.LoadApp(LOAD_APP_URL, getString(R.string.load_app))
