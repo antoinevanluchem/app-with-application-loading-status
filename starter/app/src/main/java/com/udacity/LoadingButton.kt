@@ -10,6 +10,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -22,6 +23,18 @@ class LoadingButton @JvmOverloads constructor(
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
         textSize = 55.0f
+    }
+
+    private var rectangleColor = 0
+    private var loadingRectangleColor = 0
+    private var circleColor = 0
+
+    init {
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            rectangleColor = getColor(R.styleable.LoadingButton_rectangleColor, 0)
+            loadingRectangleColor = getColor(R.styleable.LoadingButton_loadingRectangleColor, 0)
+            circleColor = getColor(R.styleable.LoadingButton_circleColor, 0)
+        }
     }
 
     //
@@ -119,12 +132,12 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     private fun drawRectangle(canvas: Canvas) {
-        paint.color = ContextCompat.getColor(context, R.color.colorPrimary)
+        paint.color = rectangleColor
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), paint)
     }
 
     private fun drawLoadingRectangle(canvas: Canvas) {
-        paint.color = ContextCompat.getColor(context, R.color.colorPrimaryDark)
+        paint.color = loadingRectangleColor
         canvas.drawRect(
             0f,
             0f,
@@ -144,7 +157,7 @@ class LoadingButton @JvmOverloads constructor(
         canvas.save()
 
         canvas.translate(dxCircle, dyCircle)
-        paint.color = ContextCompat.getColor(context, R.color.colorAccent)
+        paint.color = circleColor
         canvas.drawArc(
             RectF(0f, 0f, paint.textSize, paint.textSize),
             0F,

@@ -63,7 +63,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:rectangleColor="@color/colorPrimary"
+        app:loadingRectangleColor="@color/colorPrimaryDark"
+        app:circleColor="@color/colorAccent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
