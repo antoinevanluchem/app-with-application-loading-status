@@ -26,6 +26,7 @@ import com.udacity.notifications.sendNotification
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var notificationManager: NotificationManager
 
     private var downloadID: Long = 0
 
@@ -39,27 +40,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        notificationManager = this.getSystemService(NotificationManager::class.java)
+
+        // Download entities
+        glide = DownloadEntity.Glide(GLIDE_URL, getString(R.string.glide))
+        loadApp = DownloadEntity.LoadApp(LOAD_APP_URL, getString(R.string.load_app))
+        retrofit = DownloadEntity.Retrofit(RETROFIT_URL, getString(R.string.retrofit))
+
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
         createChannel(getString(R.string.download_notification_channel_id), getString(R.string.download_notification_channel_name))
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        // Unable to use DataBinding, no idea why
-        val customButton = binding.contentMain.customButton
-        val radioGroup = binding.contentMain.radioGroup
-
-        glide = DownloadEntity.Glide(GLIDE_URL, getString(R.string.glide))
-        loadApp = DownloadEntity.LoadApp(LOAD_APP_URL, getString(R.string.load_app))
-        retrofit = DownloadEntity.Retrofit(RETROFIT_URL, getString(R.string.retrofit))
-
-        customButton.setOnClickListener {
-            downloadedEntity = when (radioGroup.checkedRadioButtonId) {
+        binding.contentMain.customButton.setOnClickListener {
+            this.getSystemService(NotificationManager::class.java).cancelNotifications()
+            downloadedEntity = when (binding.contentMain.radioGroup.checkedRadioButtonId) {
                 R.id.radioGlide -> glide
                 R.id.radioLoadApp -> loadApp
                 R.id.radioRetrofit -> retrofit
                 else -> {
                     Toast.makeText(this, getString(R.string.please_select_file), Toast.LENGTH_SHORT).show()
+                    binding.contentMain.customButton.cancelLoadingAnimation()
                     return@setOnClickListener
                 }
             }
@@ -82,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             notificationChannel.enableVibration(true)
             notificationChannel.description = getString(R.string.app_name)
 
-            val notificationManager = this.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }
@@ -90,14 +91,13 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             downloadedEntity?.let {
-                findViewById<LoadingButton>(R.id.customButton).finishLoadingAnimation()
+                binding.contentMain.customButton.finishLoadingAnimation()
 
                 val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
                 val notificationManager = ContextCompat.getSystemService(applicationContext,
                     NotificationManager::class.java) as NotificationManager
 
-                notificationManager.cancelNotifications()
                 if (downloadID == id) {
                     notificationManager.sendNotification(it.fileName, DownloadStatus.Success, applicationContext)
                 }

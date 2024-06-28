@@ -101,6 +101,12 @@ class LoadingButton @JvmOverloads constructor(
         valueAnimator = finishAnimator
     }
 
+    fun cancelLoadingAnimation() {
+        valueAnimator?.cancel()
+        currentLoadingPercentage = 0.0f
+        buttonState = ButtonState.Completed
+    }
+
     //
     // onDraw
     //
@@ -192,9 +198,11 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
-        super.performClick()
-
         buttonState = ButtonState.Clicked
+
+        // Call performClick after setting the ButtonState, such that the animation can be cancelled
+        // by an onClickListener
+        super.performClick()
 
         invalidate()
         return true
