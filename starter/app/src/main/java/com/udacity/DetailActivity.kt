@@ -19,8 +19,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        val fileName = intent.getExtra(Keys.FileName)
-        val status = intent.getExtra(Keys.Status)
-
+        binding.contentDetail.fileName = intent.getExtra(Keys.FileName)
+        binding.contentDetail.status = intent.getExtra(Keys.Status)
     }
 }
