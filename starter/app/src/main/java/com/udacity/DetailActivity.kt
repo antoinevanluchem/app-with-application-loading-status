@@ -1,6 +1,7 @@
 package com.udacity
 
 import android.app.NotificationManager
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,11 @@ class DetailActivity : AppCompatActivity() {
                     Color.GREEN
                 }
             )
+        }
+
+        binding.contentDetail.okButton.setOnClickListener{
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }
