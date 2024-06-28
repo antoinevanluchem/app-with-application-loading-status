@@ -8,10 +8,11 @@ import androidx.core.app.NotificationCompat
 import com.udacity.DetailActivity
 import com.udacity.R
 
-private val NOTIFICATION_ID = 0
+private const val NOTIFICATION_ID = 0
 
-fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
+fun NotificationManager.sendNotification(fileName: String, applicationContext: Context) {
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+    contentIntent.putExtra(Keys.FileName, fileName)
     val contentPendingIntent = PendingIntent.getActivity(
         applicationContext,
         NOTIFICATION_ID,
@@ -27,7 +28,7 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setSmallIcon(R.drawable.download_image)
         .setContentTitle(applicationContext
             .getString(R.string.notification_title))
-        .setContentText(messageBody)
+        .setContentText(applicationContext.getString(R.string.notification_description))
         .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)
         // To support devices running API level 25 or lower
