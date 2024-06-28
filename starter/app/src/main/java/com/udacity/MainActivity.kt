@@ -3,39 +3,40 @@ package com.udacity
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Entity
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.udacity.databinding.ActivityMainBinding
 import com.udacity.notifications.cancelNotifications
 import com.udacity.notifications.sendNotification
+import kotlin.properties.Delegates
+import android.Manifest
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    // Notifications
     private lateinit var notificationManager: NotificationManager
+    private val RC_NOTIFICATION = 99
+    private var notificationsAllowed by Delegates.notNull<Boolean>()
 
-    private var downloadID: Long = 0
-
+    // Downloads
     private lateinit var glide: DownloadEntity.Glide
     private lateinit var loadApp: DownloadEntity.LoadApp
     private lateinit var retrofit: DownloadEntity.Retrofit
-
+    private var downloadID: Long = 0
     private var downloadedEntity: DownloadEntity? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -56,25 +57,39 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         registerOnClickListener()
+
+        requestNotificationPermission()
     }
 
     //
     // On Click Listener
     //
     private fun registerOnClickListener() {
-        binding.contentMain.customButton.setOnClickListener {
-            this.getSystemService(NotificationManager::class.java).cancelNotifications()
-            downloadedEntity = when (binding.contentMain.radioGroup.checkedRadioButtonId) {
+            binding.contentMain.customButton.setOnClickListener {
+            val customButton = binding.contentMain.customButton
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            val checkedRadioButtonId = binding.contentMain.radioGroup.checkedRadioButtonId
+
+            if (!notificationsAllowed) {
+                showPLeaseAllowNotificationsToast()
+                customButton.cancelLoadingAnimation()
+                return@setOnClickListener
+            }
+
+            notificationManager.cancelNotifications()
+
+            downloadedEntity = when (checkedRadioButtonId) {
                 R.id.radioGlide -> glide
                 R.id.radioLoadApp -> loadApp
                 R.id.radioRetrofit -> retrofit
                 else -> {
                     Toast.makeText(this, getString(R.string.please_select_file), Toast.LENGTH_SHORT)
                         .show()
-                    binding.contentMain.customButton.cancelLoadingAnimation()
+                    customButton.cancelLoadingAnimation()
                     return@setOnClickListener
                 }
             }
+
             download()
         }
     }
@@ -128,13 +143,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestNotificationPermission () {
+    private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissions(Manifest.permission.POST_NOTIFICATIONS)
-
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), RC_NOTIFICATION)
+        } else {
+            notificationsAllowed = true
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == RC_NOTIFICATION) {
+            notificationsAllowed = if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                true
+            } else {
+                showPLeaseAllowNotificationsToast()
+                false
+            }
+        }
+    }
+
+    private fun showPLeaseAllowNotificationsToast() {
+        Toast.makeText(this, getString(R.string.please_allow_notifications), Toast.LENGTH_SHORT)
+            .show()
+    }
 
     //
     // Download

@@ -17,6 +17,8 @@
     <string name="retrofit">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
 
     <string name="please_select_file">Please select the file to download</string>
+    <string name="please_allow_notifications">Please allow this app to send notifications!</string>
+
 
     <string name="download_notification_channel_id" translatable="false">download_channel</string>
     <string name="download_notification_channel_name" translatable="false">Downloads</string>
