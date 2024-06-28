@@ -27,4 +27,7 @@
     <string name="success_status">Success</string>
     <string name="failure_status">Failure</string>
 
+    <string name="notification_button_name">Click here to see your downloaded file.</string>
+
+
 </resources>

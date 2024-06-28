@@ -42,6 +42,11 @@ fun NotificationManager.sendNotification(
         .setAutoCancel(true)
         // To support devices running API level 25 or lower
         .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .addAction(
+            R.drawable.download_image,
+            applicationContext.getString(R.string.notification_button_name),
+            contentPendingIntent
+        )
 
     notify(NOTIFICATION_ID, builder.build())
 
