@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             val checkedRadioButtonId = binding.contentMain.radioGroup.checkedRadioButtonId
 
             if (!notificationsAllowed) {
-                showPLeaseAllowNotificationsToast()
+                showPleaseAllowNotificationsToast()
                 customButton.cancelLoadingAnimation()
                 return@setOnClickListener
             }
@@ -162,13 +162,13 @@ class MainActivity : AppCompatActivity() {
             notificationsAllowed = if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 true
             } else {
-                showPLeaseAllowNotificationsToast()
+                showPleaseAllowNotificationsToast()
                 false
             }
         }
     }
 
-    private fun showPLeaseAllowNotificationsToast() {
+    private fun showPleaseAllowNotificationsToast() {
         Toast.makeText(this, getString(R.string.please_allow_notifications), Toast.LENGTH_SHORT)
             .show()
     }
