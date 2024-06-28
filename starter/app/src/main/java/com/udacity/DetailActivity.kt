@@ -1,13 +1,10 @@
 package com.udacity
 
-import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.udacity.databinding.ActivityDetailBinding
-import com.udacity.notifications.IntentKey
 import com.udacity.notifications.Keys
 import com.udacity.notifications.getExtra
 
@@ -34,7 +31,7 @@ class DetailActivity : AppCompatActivity() {
             )
         }
 
-        binding.contentDetail.okButton.setOnClickListener{
+        binding.contentDetail.okButton.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }

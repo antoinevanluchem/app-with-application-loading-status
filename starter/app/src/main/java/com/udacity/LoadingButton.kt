@@ -7,9 +7,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import kotlin.properties.Delegates
@@ -127,7 +125,13 @@ class LoadingButton @JvmOverloads constructor(
 
     private fun drawLoadingRectangle(canvas: Canvas) {
         paint.color = ContextCompat.getColor(context, R.color.colorPrimaryDark)
-        canvas.drawRect(0f, 0f, widthSize.toFloat() * currentLoadingPercentage, heightSize.toFloat(), paint)
+        canvas.drawRect(
+            0f,
+            0f,
+            widthSize.toFloat() * currentLoadingPercentage,
+            heightSize.toFloat(),
+            paint
+        )
     }
 
     private fun drawText(canvas: Canvas) {
@@ -141,7 +145,13 @@ class LoadingButton @JvmOverloads constructor(
 
         canvas.translate(dxCircle, dyCircle)
         paint.color = ContextCompat.getColor(context, R.color.colorAccent)
-        canvas.drawArc(RectF(0f, 0f, paint.textSize, paint.textSize), 0F, currentLoadingPercentage * 360, true, paint)
+        canvas.drawArc(
+            RectF(0f, 0f, paint.textSize, paint.textSize),
+            0F,
+            currentLoadingPercentage * 360,
+            true,
+            paint
+        )
 
         canvas.restore()
     }
@@ -155,7 +165,8 @@ class LoadingButton @JvmOverloads constructor(
 
             // xText and dxCircle are relative to widthSize
             xText = widthSize / 2.0f
-            dxCircle = widthSize / 2.0f + paint.measureText(R.string.button_loading.toString()) / 2.0f + paint.textSize / 2.0f
+            dxCircle =
+                widthSize / 2.0f + paint.measureText(R.string.button_loading.toString()) / 2.0f + paint.textSize / 2.0f
         }
 
     private var heightSize = 0

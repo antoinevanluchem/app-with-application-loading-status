@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loadApp: DownloadEntity.LoadApp
     private lateinit var retrofit: DownloadEntity.Retrofit
 
-
     private var downloadedEntity: DownloadEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        createChannel(getString(R.string.download_notification_channel_id), getString(R.string.download_notification_channel_name))
+        createChannel(
+            getString(R.string.download_notification_channel_id),
+            getString(R.string.download_notification_channel_name)
+        )
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         binding.contentMain.customButton.setOnClickListener {
@@ -60,7 +62,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.radioLoadApp -> loadApp
                 R.id.radioRetrofit -> retrofit
                 else -> {
-                    Toast.makeText(this, getString(R.string.please_select_file), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.please_select_file), Toast.LENGTH_SHORT)
+                        .show()
                     binding.contentMain.customButton.cancelLoadingAnimation()
                     return@setOnClickListener
                 }
@@ -72,11 +75,12 @@ class MainActivity : AppCompatActivity() {
     //
     // Notifications
     //
-    private fun createChannel(channelId: String, channelName: String){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
-                channelId, channelName, NotificationManager.IMPORTANCE_LOW).apply {
-                    setShowBadge(true)
+                channelId, channelName, NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                setShowBadge(true)
             }
 
             notificationChannel.enableLights(true)
@@ -95,14 +99,23 @@ class MainActivity : AppCompatActivity() {
 
                 val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
-                val notificationManager = ContextCompat.getSystemService(applicationContext,
-                    NotificationManager::class.java) as NotificationManager
+                val notificationManager = ContextCompat.getSystemService(
+                    applicationContext,
+                    NotificationManager::class.java
+                ) as NotificationManager
 
                 if (downloadID == id) {
-                    notificationManager.sendNotification(it.fileName, DownloadStatus.Success, applicationContext)
-                }
-                else{
-                    notificationManager.sendNotification(it.fileName, DownloadStatus.Fail, applicationContext)
+                    notificationManager.sendNotification(
+                        it.fileName,
+                        DownloadStatus.Success,
+                        applicationContext
+                    )
+                } else {
+                    notificationManager.sendNotification(
+                        it.fileName,
+                        DownloadStatus.Fail,
+                        applicationContext
+                    )
                 }
             }
         }
@@ -137,8 +150,11 @@ class MainActivity : AppCompatActivity() {
         abstract val fileName: String
 
         data class Glide(override val url: String, override val fileName: String) : DownloadEntity()
-        data class LoadApp(override val url: String, override val fileName: String) : DownloadEntity()
-        data class Retrofit(override val url: String, override val fileName: String) : DownloadEntity()
+        data class LoadApp(override val url: String, override val fileName: String) :
+            DownloadEntity()
+
+        data class Retrofit(override val url: String, override val fileName: String) :
+            DownloadEntity()
     }
 
     companion object {

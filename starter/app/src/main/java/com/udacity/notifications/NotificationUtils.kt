@@ -11,7 +11,11 @@ import com.udacity.R
 
 private const val NOTIFICATION_ID = 0
 
-fun NotificationManager.sendNotification(fileName: String, status: DownloadStatus, applicationContext: Context) {
+fun NotificationManager.sendNotification(
+    fileName: String,
+    status: DownloadStatus,
+    applicationContext: Context
+) {
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
     contentIntent
         .putExtra(Keys.FileName, fileName)
@@ -29,8 +33,10 @@ fun NotificationManager.sendNotification(fileName: String, status: DownloadStatu
         applicationContext.getString(R.string.download_notification_channel_id)
     )
         .setSmallIcon(R.drawable.download_image)
-        .setContentTitle(applicationContext
-            .getString(R.string.notification_title))
+        .setContentTitle(
+            applicationContext
+                .getString(R.string.notification_title)
+        )
         .setContentText(applicationContext.getString(R.string.notification_description))
         .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)
