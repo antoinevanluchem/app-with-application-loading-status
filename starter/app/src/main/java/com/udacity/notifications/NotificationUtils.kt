@@ -6,11 +6,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.udacity.DetailActivity
+import com.udacity.DownloadStatus
 import com.udacity.R
 
 private const val NOTIFICATION_ID = 0
 
-fun NotificationManager.sendNotification(fileName: String, status: String, applicationContext: Context) {
+fun NotificationManager.sendNotification(fileName: String, status: DownloadStatus, applicationContext: Context) {
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
     contentIntent
         .putExtra(Keys.FileName, fileName)

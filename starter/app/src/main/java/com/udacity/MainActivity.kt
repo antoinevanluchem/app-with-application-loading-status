@@ -99,10 +99,10 @@ class MainActivity : AppCompatActivity() {
 
                 notificationManager.cancelNotifications()
                 if (downloadID == id) {
-                    notificationManager.sendNotification(it.fileName, "Success", applicationContext)
+                    notificationManager.sendNotification(it.fileName, DownloadStatus.Success, applicationContext)
                 }
                 else{
-                    notificationManager.sendNotification(it.fileName, "Fail", applicationContext)
+                    notificationManager.sendNotification(it.fileName, DownloadStatus.Fail, applicationContext)
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.udacity
 
 import android.app.NotificationManager
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -20,6 +21,16 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.contentDetail.fileName = intent.getExtra(Keys.FileName)
-        binding.contentDetail.status = intent.getExtra(Keys.Status)
+        intent.getExtra(Keys.Status)?.let {
+            binding.contentDetail.status = it.name
+
+            binding.contentDetail.statusTextView.setTextColor(
+                if (it == DownloadStatus.Fail) {
+                    Color.RED
+                } else {
+                    Color.GREEN
+                }
+            )
+        }
     }
 }
