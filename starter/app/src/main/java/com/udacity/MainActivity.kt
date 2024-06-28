@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Entity
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
@@ -28,6 +29,13 @@ class MainActivity : AppCompatActivity() {
 
     private var downloadID: Long = 0
 
+    private lateinit var glide: DownloadEntity.Glide
+    private lateinit var loadApp: DownloadEntity.LoadApp
+    private lateinit var retrofit: DownloadEntity.Retrofit
+
+
+    private var downloadedEntity: DownloadEntity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -41,13 +49,21 @@ class MainActivity : AppCompatActivity() {
         val customButton = findViewById<LoadingButton>(R.id.customButton)
         val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
 
+        glide = DownloadEntity.Glide(GLIDE_URL, getString(R.string.glide))
+        loadApp = DownloadEntity.LoadApp(LOAD_APP_URL, getString(R.string.load_app))
+        retrofit = DownloadEntity.Retrofit(RETROFIT_URL, getString(R.string.retrofit))
+
         customButton.setOnClickListener {
-            when(radioGroup.checkedRadioButtonId){
-                R.id.radioGlide -> download(GLIDE_URL)
-                R.id.radioLoadApp -> download(LOAD_APP_URL)
-                R.id.radioRetrofit -> download(RETROFIT_URL)
-                else -> Toast.makeText(this,getString(R.string.please_select_file), Toast.LENGTH_SHORT).show()
+            downloadedEntity = when (radioGroup.checkedRadioButtonId) {
+                R.id.radioGlide -> glide
+                R.id.radioLoadApp -> loadApp
+                R.id.radioRetrofit -> retrofit
+                else -> {
+                    Toast.makeText(this, getString(R.string.please_select_file), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
             }
+            download()
         }
     }
 
@@ -73,19 +89,21 @@ class MainActivity : AppCompatActivity() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            findViewById<LoadingButton>(R.id.customButton).finishLoadingAnimation()
+            downloadedEntity?.let {
+                findViewById<LoadingButton>(R.id.customButton).finishLoadingAnimation()
 
-            val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
-            val notificationManager = ContextCompat.getSystemService(applicationContext,
-                NotificationManager::class.java) as NotificationManager
+                val notificationManager = ContextCompat.getSystemService(applicationContext,
+                    NotificationManager::class.java) as NotificationManager
 
-            notificationManager.cancelNotifications()
-            if (downloadID == id) {
-                notificationManager.sendNotification("Download successful!", applicationContext)
-            }
-            else{
-                notificationManager.sendNotification("Download failed!", applicationContext)
+                notificationManager.cancelNotifications()
+                if (downloadID == id) {
+                    notificationManager.sendNotification(it.fileName, "Success", applicationContext)
+                }
+                else{
+                    notificationManager.sendNotification(it.fileName, "Fail", applicationContext)
+                }
             }
         }
     }
@@ -95,18 +113,32 @@ class MainActivity : AppCompatActivity() {
     // Download
     //
 
-    private fun download(url: String) {
-        val request =
-            DownloadManager.Request(Uri.parse(url))
-                .setTitle(getString(R.string.app_name))
-                .setDescription(getString(R.string.app_description))
-                .setRequiresCharging(false)
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
+    private fun download() {
+        downloadedEntity?.let {
+            val request =
+                DownloadManager.Request(Uri.parse(it.url))
+                    .setTitle(getString(R.string.app_name))
+                    .setDescription(getString(R.string.app_description))
+                    .setRequiresCharging(false)
+                    .setAllowedOverMetered(true)
+                    .setAllowedOverRoaming(true)
 
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        downloadID =
-            downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            downloadID =
+                downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        }
+    }
+
+    //
+    // Download Entities
+    //
+    sealed class DownloadEntity {
+        abstract val url: String
+        abstract val fileName: String
+
+        data class Glide(override val url: String, override val fileName: String) : DownloadEntity()
+        data class LoadApp(override val url: String, override val fileName: String) : DownloadEntity()
+        data class Retrofit(override val url: String, override val fileName: String) : DownloadEntity()
     }
 
     companion object {

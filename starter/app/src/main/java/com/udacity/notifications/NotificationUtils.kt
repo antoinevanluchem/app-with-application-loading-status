@@ -10,9 +10,11 @@ import com.udacity.R
 
 private const val NOTIFICATION_ID = 0
 
-fun NotificationManager.sendNotification(fileName: String, applicationContext: Context) {
+fun NotificationManager.sendNotification(fileName: String, status: String, applicationContext: Context) {
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
-    contentIntent.putExtra(Keys.FileName, fileName)
+    contentIntent
+        .putExtra(Keys.FileName, fileName)
+        .putExtra(Keys.Status, status)
     val contentPendingIntent = PendingIntent.getActivity(
         applicationContext,
         NOTIFICATION_ID,
