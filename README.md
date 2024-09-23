@@ -1,3 +1,52 @@
+# Code Review 
+
+## Reviewer Note 
+> Hello Student!
+> 
+> An awesome job was done with this project. Everything works and looks just as expected.
+> 
+> ✅ Custom attributes have been applied to the custom button.
+> 
+> ✅ The custom button is perfectly implemented and the animation is great. The message changes when the user clicks on the download button after selecting an option and he constantly receives good feedback while the file is downloading.
+> 
+> ✅ If the user clicks on the download button without making a selection, an informative Toast is shown.
+> 
+> ✅ The notification gives the needed information and a button to take the user to the detail screen has been included.
+> 
+> ✅ The detail screen contains the name of the file downloaded and informs the user about its status.
+> 
+> ✅ The animation using MotionLayout has also been correctly implemented.
+> 
+>Now, you can continue with the lessons, and please, keep working like this!
+>
+
+## General 
+✅ Code compiles and runs without errors 
+> Correctly cloned from Github and running perfectly on a device.
+>
+
+## Custom View 
+✅ Customize and display of information using canvas with desired color and style 
+> A custom button has been created by extending View and custom attributes have been assigned to it.
+
+✅ Animate UI elements with property animations to provide users with visual feedback in an Android app
+> Background, text, and circle are correctly animated by changing width, text, and color using [ValueAnimator](https://developer.android.com/reference/android/animation/ValueAnimator).
+> Additional resources for your knowledge: [Custom view from scratch](https://medium.com/revolut/custom-view-from-scratch-part-i-931178481903).
+
+## Notifications 
+✅ Add custom functionality to the notifications 
+> As seen in the image above, the notification contains a button that takes the user to the detail screen, and custom values are passed to the details screen as seen below.
+> 
+✅ Send contextual messages using notifications to keep users informed 
+> Both, Toast and notifications are being displayed to the user.
+> Toast is being used to display a message to the user if he clicks on the download button without having made a previous selection.
+> Additional resources for you knowledge: [How to add custom styled Toast](https://www.geeksforgeeks.org/how-to-add-a-custom-styled-toast-in-android-using-kotlin/), [all about notifications in android](https://www.geeksforgeeks.org/how-to-add-a-custom-styled-toast-in-android-using-kotlin/).
+
+## MotionLayout 
+✅ use declarative XML with `MotionLayout` to coordinate animations across multiple views
+> MotionLayout is the new layout in Android, to create amazing interactive animations, as you have done here. 👏
+> In [this article](https://medium.com/google-developers/introduction-to-motionlayout-part-i-29208674b10d) you will find more detailed information about what you can do using MotionLayout.
+
 # LoadApp
 
 In this project students will create an app to download a file from Internet by clicking on a custom-built button where:
